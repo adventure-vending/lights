@@ -2,7 +2,10 @@ from kinet import *
 
 #ethernet attached power supply.
 #The PowerSupply class inherits from list
-pds = PowerSupply("192.168.1.120")
+
+ipAddress = "192.168.1.120"
+
+pds = PowerSupply(ipAddress)
 
 # address light fixtures using lowest dmx address
 # example if using RGB addresses 3,4,5 choose 5
