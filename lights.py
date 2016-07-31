@@ -61,14 +61,17 @@ pds.append(fix23)
 
 
 # choose a box from 0- 23 and that box will be lit with all white, all others off
+#TODO make into a class that can be called with the current box number
 prize_box = 0
 
 for i in range(0, len(list(pds))):
   if i == prize_box:
     #if this is the selected prize then turn white
+    #TODO make light pulse
     pds[i].rgb = (255, 255, 255)
   else:
     #turn off light
+    #TODO make slowly fade or some other aswsome effect
     pds[i].rgb = (0, 0, 0)
 
 pds.go()
