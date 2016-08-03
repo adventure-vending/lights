@@ -7,6 +7,7 @@ from kinet import *
 #The PowerSupply class inherits from list
 ip_address = "192.168.1.120"
 pds = PowerSupply(ip_address)
+box = 0
 
 
 #TODO, read from config file that includes fixures and starting addresses,
@@ -87,14 +88,15 @@ def fader(pds1, cnt):
         pds2.clear()
         cnt -= 1
 
-def selectBox(pds, box, pause=.1, steps=1000):
+def selectBox(pds, box, pause=.1, steps=255):
     div = steps / len(pds)
-    box = box -1
+    fix = box -1
+    print "Selected Box:", box
     for step in range(steps):
         ratio = 0
         for idx, fixture in enumerate(pds):
 
-            if idx == box:
+            if idx == fix:
               #if this is the selected prize then turn white
               #TODO make light pulse
               pds[idx].rgb = (255, 255, 255)
@@ -103,26 +105,56 @@ def selectBox(pds, box, pause=.1, steps=1000):
               #if not the prize box do a slow rainbow patern
               ratio += (step + idx * div) % steps / float(steps)
               fixture.hsv = (ratio, 1.0, 1.0)
-        print pds
+        #print pds
         pds.go()
         time.sleep(pause)
+        print "Done selecting Box:", box, "going to sleep for", pause
+        box = 0
 
-def openBox(pds, box):
+
+def openBox(pds, box, pause=.1, steps=25):
   #TODO write a light show to celebrate when a box is opened
   #for now this is just the same routine for select box but faster
   #not sure if this looks good or not
-      selectBox(pds, box, steps=10)
+    div = steps / len(pds)
+    fix = box -1
+    print "Opening Box:", box
+    for step in range(steps):
+      ratio = 0
+      for idx, fixture in enumerate(pds):
 
-def idle(pds, pause=.1, steps=1000):
+          if idx == fix:
+            #if this is the selected prize then turn white
+            #TODO make light pulse
+            pds[idx].rgb = (255, 255, 255)
+
+          else:
+            #if not the prize box do a slow rainbow patern
+            ratio += (step + idx * div) % steps / float(steps)
+            fixture.hsv = (ratio, 1.0, 1.0)
+      #print pds
+      pds.go()
+      time.sleep(pause)
+    print "Done Opening Box:", box
+    box = 0
+
+
+def idle(pds, pause=.1, steps=255):
+  #TODO: idle ends after one rainbow rep, needs to go on forever
+  #TODO: Replace rainbow with something better looking
+    print "Starting Idle"
     div = steps / len(pds)
     for step in range(steps):
         ratio = 0
         for idx, fixture in enumerate(pds):
             ratio += (step + idx * div) % steps / float(steps)
             fixture.hsv = (ratio, 1.0, 1.0)
-        print pds
+        #print pds
         pds.go()
         time.sleep(pause)
+        #if I dont sleep here then get socket.error: [Errno 55] No buffer space available
+    print "Idle Done"
+
 
 
 #TODO, write a idle routine that is more aware of the placement of lights and does a cool animation
@@ -130,7 +162,26 @@ def idle(pds, pause=.1, steps=1000):
 
 #TODO, add a test here to change the prize box every few seconds to simulate user input
 #TODO, use the fader class to transition between user inputs
-#selectBox(pds, 6)
-openBox(pds, 1)
+
+
+def userInputSim():
+  #Issues,
+  #1 observing a flash every 10 seconds when using rainbow
+  #2 idle routine has to complete before select box can start?
+  #selectBox(pds, 1)
+
+  openBox(pds, 1)
+
+  #selectBox(pds, 2)
+  time.sleep(10)
+  #during this sleep there is no lights
+  openBox(pds, 2)
+
+
+
+userInputSim()
+
+while (box == 0):
+  idle(pds)
 
 
