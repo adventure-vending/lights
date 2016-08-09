@@ -9,9 +9,10 @@ class Main():
     def test(self):
         self.init_machine()
         print "started"
-        self.light_system.open_box(1)
+        #self.light_system.open_box(1)
         sleep(4)
-        self.light_system.select_box(1)
+        self.light_system.select_box(2)
+        sleep(999)
         print "ending.."
         self.cleanup()
         print "end"
