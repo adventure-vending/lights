@@ -14,9 +14,9 @@ pds = PowerSupply(ip_address)
 
 # address light fixtures using lowest dmx address
 # example if using RGB addresses 3,4,5 choose 5
-fix00 = FixtureRGB(0)
-fix01 = FixtureRGB(6)
-#fix02 = FixtureRGB(0)
+fix00 = FixtureRGB(64)
+fix01 = FixtureRGB(25)
+fix02 = FixtureRGB(19)
 #fix03 = FixtureRGB(0)
 #fix04 = FixtureRGB(0)
 #fix05 = FixtureRGB(0)
@@ -43,7 +43,7 @@ fix01 = FixtureRGB(6)
 # TODO, automate appending based on the number of fixtures defined.
 pds.append(fix00)
 pds.append(fix01)
-#pds.append(fix02)
+pds.append(fix02)
 #pds.append(fix03)
 #pds.append(fix04)
 #pds.append(fix05)
@@ -87,7 +87,7 @@ def fader(pds1, cnt):
         pds2.clear()
         cnt -= 1
 
-def selectBox(pds, box, pause=.1, steps=1000):
+def selectBox(pds, box, pause=.1, steps=255):
     div = steps / len(pds)
     box = box -1
     for step in range(steps):
@@ -113,7 +113,9 @@ def openBox(pds, box):
   #not sure if this looks good or not
       selectBox(pds, box, steps=10)
 
-def idle(pds, pause=.1, steps=1000):
+def idle(pds, pause=.1, steps=255):
+    steps= 1000
+    pause= 0.1
     div = steps / len(pds)
     for step in range(steps):
         ratio = 0
@@ -131,6 +133,11 @@ def idle(pds, pause=.1, steps=1000):
 #TODO, add a test here to change the prize box every few seconds to simulate user input
 #TODO, use the fader class to transition between user inputs
 #selectBox(pds, 6)
-openBox(pds, 1)
+
+time.sleep(1)
+openBox(pds, 3)
+time.sleep(2)
+openBox(pds, 2)
+idle(pds)
 
 
