@@ -3,7 +3,9 @@ from time import sleep
 import sys
 import signal
 import constants
+import csv, json
 from kinet import *
+
 # see https://github.com/vishnubob/kinet
 
 #TODO, fix but in kinet library that chooses wifi interface when avalible
@@ -27,7 +29,7 @@ class LightSystem(multiprocessing.Process):
         with open('light_addresses.csv') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                self.pds.append(FixtureRGB(row['light_addresses']))
+                self.pds.append(FixtureRGB(int(row['light_address'])))
 
 
     def setup_handlers(self):
